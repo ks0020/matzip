@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.yhpark.matzip.mappers.UserMapper">
+    <delete id="deleteContactCodeByIndex">
+        DELETE
+        FROM `matzip_new`.`contact_codes`
+        WHERE `index` = #{index}
+        LIMIT 1
+    </delete>
+
+    <delete id="deleteEmailCodeByIndex">
+        DELETE
+        FROM `matzip_new`.`email_codes`
+        WHERE `index` = #{index}
+        LIMIT 1
+    </delete>
+
+    <insert id="insertContactCode"
+            useGeneratedKeys="true"
+            keyColumn="index"
+            keyProperty="index"
+            parameterType="dev.yhpark.matzip.entities.ContactCodeEntity">
+        INSERT INTO `matzip_new`.`contact_codes` (`contact`, `code`, `salt`, `created_at`, `expires_at`, `expired_flag`, `client_ip`, `client_ua`)
+        VALUES (#{contact},
+                #{code},
+                #{salt},
+                IFNULL(#{createdAt}, DEFAULT(`created_at`)),
+                #{expiresAt},
+                #{isExpired},
+                #{clientIp},
+                #{clientUa})
+    </insert>
+
+    <insert id="insertEmailCode"
+            useGeneratedKeys="true"
+            keyColumn="index"
+            keyProperty="index"
+            parameterType="dev.yhpark.matzip.entities.EmailCodeEntity">
+        INSERT INTO `matzip_new`.`email_codes` (`email`, `code`, `salt`, `created_at`, `expires_at`, `expired_flag`, `client_ip`, `client_ua`)
+        VALUES (#{email},
+                #{code},
+                #{salt},
+                IFNULL(#{createdAt}, DEFAULT(`created_at`)),
+                #{expiresAt},
+                #{isExpired},
+                #{clientIp},
+                #{clientUa})
+    </insert>
+
+    <insert id="insertUser"
+            useGeneratedKeys="true"
+            keyColumn="index"
+            keyProperty="index"
+            parameterType="dev.yhpark.matzip.entities.UserEntity">
+        INSERT INTO `matzip_new`.`users` (`email`, `password`, `nickname`, `name`, `contact`, `address_postal`, `address_primary`, `address_secondary`, `registered_at`, `verified_flag`, `suspended_flag`, `deleted_flag`, `admin_flag`)
+        VALUES (#{email},
+                #{password},
+                #{nickname},
+                #{name},
+                #{contact},
+                #{addressPostal},
+                #{addressPrimary},
+                #{addressSecondary},
+                IFNULL(#{registeredAt}, DEFAULT(`registered_at`)),
+                #{isVerified},
+                #{isSuspended},
+                #{isDeleted},
+                #{isAdmin})
+    </insert>
+
+    <select id="selectContactCodeByContactCodeSalt"
+            resultType="dev.yhpark.matzip.entities.ContactCodeEntity">
+        SELECT `index`        AS `index`,
+               `contact`      AS `contact`,
+               `code`         AS `code`,
+               `salt`         AS `salt`,
+               `created_at`   AS `createdAt`,
+               `expires_at`   AS `expiresAt`,
+               `expired_flag` AS `isExpired`,
+               `client_ip`    AS `clientIp`,
+               `client_ua`    AS `clientUa`
+        FROM `matzip_new`.`contact_codes`
+        WHERE BINARY `contact` = #{contact}
+          AND BINARY `code` = #{code}
+          AND BINARY `salt` = #{salt}
+        LIMIT 1
+    </select>
+
+    <select id="selectEmailCodeByEmailCodeSalt"
+            resultType="dev.yhpark.matzip.entities.EmailCodeEntity">
+        SELECT `index`        AS `index`,
+               `email`        AS `email`,
+               `code`         AS `code`,
+               `salt`         AS `salt`,
+               `created_at`   AS `createdAt`,
+               `expires_at`   AS `expiresAt`,
+               `expired_flag` AS `isExpired`,
+               `client_ip`    AS `clientIp`,
+               `client_ua`    AS `clientUa`
+        FROM `matzip_new`.`email_codes`
+        WHERE BINARY `email` = #{email}
+          AND BINARY `code` = #{code}
+          AND BINARY `salt` = #{salt}
+        LIMIT 1
+    </select>
+
+    <select id="selectUserByEmail"
+            resultType="dev.yhpark.matzip.entities.UserEntity">
+        SELECT `index`             AS `index`,
+               `email`             AS `email`,
+               `password`          AS `password`,
+               `nickname`          AS `nickname`,
+               `name`              AS `name`,
+               `contact`           AS `contact`,
+               `address_postal`    AS `addressPostal`,
+               `address_primary`   AS `addressPrimary`,
+               `address_secondary` AS `addressSecondary`,
+               `registered_at`     AS `registeredAt`,
+               `verified_flag`     AS `isVerified`,
+               `suspended_flag`    AS `isSuspended`,
+               `deleted_flag`      AS `isDeleted`,
+               `admin_flag`        AS `isAdmin`
+        FROM `matzip_new`.`users`
+        WHERE BINARY `email` = #{email}
+        LIMIT 1
+    </select>
+
+    <select id="selectUserByContact"
+            resultType="dev.yhpark.matzip.entities.UserEntity">
+        SELECT `index`             AS `index`,
+               `email`             AS `email`,
+               `password`          AS `password`,
+               `nickname`          AS `nickname`,
+               `name`              AS `name`,
+               `contact`           AS `contact`,
+               `address_postal`    AS `addressPostal`,
+               `address_primary`   AS `addressPrimary`,
+               `address_secondary` AS `addressSecondary`,
+               `registered_at`     AS `registeredAt`,
+               `verified_flag`     AS `isVerified`,
+               `suspended_flag`    AS `isSuspended`,
+               `deleted_flag`      AS `isDeleted`,
+               `admin_flag`        AS `isAdmin`
+        FROM `matzip_new`.`users`
+        WHERE BINARY `contact` = #{contact}
+        LIMIT 1
+    </select>
+
+    <select id="selectUserCountByContact"
+            resultType="_int">
+        SELECT COUNT(0)
+        FROM `matzip_new`.`users`
+        WHERE BINARY `contact` = #{contact}
+    </select>
+
+    <select id="selectUserCountByEmail"
+            resultType="_int">
+        SELECT COUNT(0)
+        FROM `matzip_new`.`users`
+        WHERE BINARY `email` = #{email}
+    </select>
+
+    <select id="selectUserCountByNickname"
+            resultType="_int">
+        SELECT COUNT(0)
+        FROM `matzip_new`.`users`
+        WHERE BINARY `nickname` = #{nickname}
+    </select>
+
+    <update id="updateContactCode"
+            parameterType="dev.yhpark.matzip.entities.ContactCodeEntity">
+        UPDATE `matzip_new`.`contact_codes`
+        SET `contact`      = #{contact},
+            `code`         = #{code},
+            `salt`         = #{salt},
+            `created_at`   = #{createdAt},
+            `expires_at`   = #{expiresAt},
+            `expired_flag` = #{isExpired},
+            `client_ip`    = #{clientIp},
+            `client_ua`    = #{clientUa}
+        WHERE `index` = #{index}
+        LIMIT 1
+    </update>
+
+    <update id="updateEmailCode"
+            parameterType="dev.yhpark.matzip.entities.EmailCodeEntity">
+        UPDATE `matzip_new`.`email_codes`
+        SET `email`        = #{email},
+            `code`         = #{code},
+            `salt`         = #{salt},
+            `created_at`   = #{createdAt},
+            `expires_at`   = #{expiresAt},
+            `expired_flag` = #{isExpired},
+            `client_ip`    = #{clientIp},
+            `client_ua`    = #{clientUa}
+        WHERE `index` = #{index}
+        LIMIT 1
+    </update>
+
+    <update id="updateUser"
+            parameterType="dev.yhpark.matzip.entities.UserEntity">
+        UPDATE `matzip_new`.`users`
+        SET `email`             = #{email},
+            `password`          = #{password},
+            `nickname`          = #{nickname},
+            `name`              = #{name},
+            `contact`           = #{contact},
+            `address_postal`    = #{addressPostal},
+            `address_primary`   = #{addressPrimary},
+            `address_secondary` = #{addressSecondary},
+            `registered_at`     = #{registeredAt},
+            `verified_flag`     = #{isVerified},
+            `suspended_flag`    = #{isSuspended},
+            `deleted_flag`      = #{isDeleted},
+            `admin_flag`        = #{isAdmin}
+        WHERE `index` = #{index}
+        LIMIT 1
+    </update>
+</mapper>

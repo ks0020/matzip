@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<!--suppress RequiredAttributes -->
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="YHPark.Dev">
+    <meta name="description" content="맛을 담다. 맛집">
+    <meta name="keywords" content="맛집">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="robots" content="index, nofollow, noarchive, nosnippet, noimageindex, nocache">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="var-signed" th:content="${session.user != null}">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>맛을 담다 - 맛집</title>
+    <!-- <link rel="stylesheet" th:href="@{/resources/stylesheets/common.css}">-->
+    <!-- <link rel="stylesheet" th:href="@{/resources/stylesheets/index.css}">-->
+    <!-- <link rel="stylesheet" th:href="@{/resources/stylesheets/index.accountForm.css}">-->
+    <!-- <link rel="stylesheet" th:href="@{/resources/stylesheets/index.detail.css}">-->
+    <!-- <link rel="stylesheet" th:href="@{/resources/stylesheets/index.loginForm.css}">-->
+    <!-- <link rel="stylesheet" th:href="@{/resources/stylesheets/index.map.css}">-->
+    <!-- <link rel="stylesheet" th:href="@{/resources/stylesheets/index.menu.css}">-->
+    <!-- <link rel="stylesheet" th:href="@{/resources/stylesheets/index.place.css}">-->
+    <!-- <link rel="stylesheet" th:href="@{/resources/stylesheets/index.placeAddForm.css}">-->
+    <!-- <link rel="stylesheet" th:href="@{/resources/stylesheets/index.placeEditForm.css}">-->
+    <!-- <link rel="stylesheet" th:href="@{/resources/stylesheets/index.recoverForm.css}">-->
+    <!-- <link rel="stylesheet" th:href="@{/resources/stylesheets/index.registerForm.css}">-->
+    <!-- <link rel="stylesheet" th:href="@{/resources/stylesheets/index.save.css}">-->
+    <!-- TODO CSS 파일들은 아래 두 개의 파일로 압축된 상태임. 원본 파일은 위 주석 참고 -->
+    <link rel="stylesheet" th:href="@{/resources/stylesheets/common.min.css}">
+    <link rel="stylesheet" th:href="@{/resources/stylesheets/index.min.css}">
+    <script th:src="@{https://dapi.kakao.com/v2/maps/sdk.js (appkey=${kakaoAppKey}, libraries='services,clusterer,drawing')}"></script>
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <!-- <script defer th:src="@{/resources/scripts/common.js}"></script>-->
+    <!-- <script defer th:src="@{/resources/scripts/index._pre.js}"></script>-->
+    <!-- <script defer th:src="@{/resources/scripts/index.accountForm.js}"></script>-->
+    <!-- <script defer th:src="@{/resources/scripts/index.detail.js}"></script>-->
+    <!-- <script defer th:src="@{/resources/scripts/index.loginForm.js}"></script>-->
+    <!-- <script defer th:src="@{/resources/scripts/index.map.js}"></script>-->
+    <!-- <script defer th:src="@{/resources/scripts/index.menu.js}"></script>-->
+    <!-- <script defer th:src="@{/resources/scripts/index.place.js}"></script>-->
+    <!-- <script defer th:src="@{/resources/scripts/index.placeAddForm.js}"></script>-->
+    <!-- <script defer th:src="@{/resources/scripts/index.placeEditForm.js}"></script>-->
+    <!-- <script defer th:src="@{/resources/scripts/index.recoverForm.js}"></script>-->
+    <!-- <script defer th:src="@{/resources/scripts/index.registerForm.js}"></script>-->
+    <!-- <script defer th:src="@{/resources/scripts/index.save.js}"></script>-->
+    <!-- <script defer th:src="@{/resources/scripts/index._post.js}"></script>-->
+    <!-- TODO JS 파일들은 아래 두 개의 파일로 압축된 상태임. 원본 파일은 위 주석 참고 -->
+    <script defer th:src="@{/resources/scripts/common.min.js}"></script>
+    <script defer th:src="@{/resources/scripts/index.min.js}"></script>
+</head>
+<body>
+<div id="_loading">
+    <img alt="" class="_icon" th:src="@{/resources/images/_loading.png}">
+    <span class="_text">잠시만 기다려 주세요...</span>
+</div>
+<div id="_cover"></div>
+<form class="login-form __right-pane" id="loginForm">
+    <div class="__title-container">
+        <h2 class="__text">로그인</h2>
+        <img alt="" class="__close" th:src="@{/resources/images/index.__right-pane.close.png}" data-mz-close>
+    </div>
+    <div class="__body">
+        <div class="input-container">
+            <label class="_object-label _with-icon">
+                <img alt="" class="_icon" th:src="@{/resources/images/index.loginForm.email.png}">
+                <input class="_object-input" maxlength="50" name="email" placeholder="이메일을 입력해 주세요." spellcheck="false" type="email">
+            </label>
+            <span class="_object-warning" data-mz-warning="email"></span>
+            <label class="_object-label _with-icon">
+                <img alt="" class="_icon" th:src="@{/resources/images/index.loginForm.password.png}">
+                <input class="_object-input" maxlength="50" name="password" placeholder="비밀번호를 입력해 주세요." spellcheck="false" type="password">
+            </label>
+            <span class="_object-warning" data-mz-warning="password"></span>
+        </div>
+        <span class="_object-warning" data-mz-warning="common"></span>
+        <div class="button-container">
+            <input class="_object-button _concept" type="submit" value="로그인">
+            <input class="_object-button" type="button" value="취소" data-mz-close>
+        </div>
+        <ul class="menu">
+            <li class="item">
+                <span class="text">아직 계정이 없으신가요?</span>
+                <input class="link" name="register" type="button" value="회원가입">
+            </li>
+            <li class="item">
+                <span class="text">계정 정보를 분실하셨나요?</span>
+                <input class="link" name="recover" type="button" value="계정 찾기">
+            </li>
+        </ul>
+    </div>
+</form>
+<form class="register-form __right-pane" id="registerForm" data-mz-step="term">
+    <div class="__title-container">
+        <h2 class="__text">회원가입</h2>
+        <img alt="" class="__close" data-mz-close th:src="@{/resources/images/index.__right-pane.close.png}">
+    </div>
+    <div class="__body" data-mz-step="address">
+    </div>
+    <div class="__body" data-mz-step="term">
+        <h2 class="title">약관</h2>
+        <label class="_object-label term-container">
+            <h3 class="title">서비스 이용 약관</h3>
+            <textarea readonly class="_object-textarea _no-resize" name="termPolicy" rows="8">서비스 이용 약관</textarea>
+        </label>
+        <label class="_object-check-container">
+            <input class="_check-input" name="termPolicyAgree" type="checkbox">
+            <span class="_checkbox"></span>
+            <span class="_text">위 서비스 이용 약관을 읽어보았고 이해하였으며 동의합니다.</span>
+        </label>
+        <span class="_object-warning" data-mz-warning="termPolicy"></span>
+        <label class="_object-label term-container">
+            <h3 class="title">개인 정보 처리 방침</h3>
+            <textarea readonly class="_object-textarea _no-resize" name="termPrivacy" rows="8">개인 정보 처리 방침</textarea>
+        </label>
+        <label class="_object-check-container">
+            <input class="_check-input" name="termPrivacyAgree" type="checkbox">
+            <span class="_checkbox"></span>
+            <span class="_text">위 개인 정보 처리 방침을 읽어보았고 이해하였으며 동의합니다.</span>
+        </label>
+        <span class="_object-warning" data-mz-warning="termPrivacy"></span>
+        <div class="button-container">
+            <input class="_object-button _concept" type="submit" value="다음">
+            <input class="_object-button" type="button" value="취소" data-mz-close>
+        </div>
+    </div>
+    <div class="__body" data-mz-step="info">
+        <h2 class="title">개인 정보 입력</h2>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.email.png}">
+            <input class="_object-input" maxlength="50" name="infoEmail" placeholder="이메일을 입력해 주세요." spellcheck="false" type="email">
+        </label>
+        <span class="_object-warning" data-mz-warning="infoEmail"></span>
+        <span class="message-box">회원가입을 완료한 후 입력하신 이메일 주소로 회원가입 절차를 완료할 수 있는 인증 링크를 포함한 이메일을 전송해 드리므로 반드시 사용 중이고 접근할 수 있는 이메일 주소를 입력해 주세요.</span>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.password.png}">
+            <input class="_object-input" maxlength="50" name="infoPassword" placeholder="비밀번호를 입력해 주세요." type="password">
+        </label>
+        <span class="_object-warning" data-mz-warning="infoPassword"></span>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.password.png}">
+            <input class="_object-input" maxlength="50" name="infoPasswordCheck" placeholder="비밀번호를 한 번 더 입력해 주세요." type="password">
+        </label>
+        <span class="_object-warning" data-mz-warning="infoPasswordCheck"></span>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.nickname.png}">
+            <input class="_object-input" maxlength="10" name="infoNickname" placeholder="닉네임을 입력해 주세요." spellcheck="false" type="text">
+        </label>
+        <span class="_object-warning" data-mz-warning="infoNickname"></span>
+        <span class="message-box">닉네임은 다른 회원에게 표시되는 이름입니다. 부적절한 닉네임을 사용하는 경우 제재 대상이 될 수 있음으로 유의해 주시기 바랍니다.</span>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.name.png}">
+            <input class="_object-input" maxlength="5" name="infoName" placeholder="이름(실명)을 입력해 주세요." spellcheck="false" type="text">
+        </label>
+        <span class="_object-warning" data-mz-warning="infoName"></span>
+        <div class="multi-container">
+            <label class="_object-label _with-icon big">
+                <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.contact.png}">
+                <input class="_object-input" maxlength="12" name="infoContact" placeholder="연락처 ('-' 없이)" spellcheck="false" type="tel">
+            </label>
+            <input class="_object-button" name="infoContactSend" type="button" value="인증번호 전송">
+        </div>
+        <div class="multi-container">
+            <label class="_object-label _with-icon big">
+                <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.contact-code.png}">
+                <input disabled class="_object-input" maxlength="6" name="infoContactCode" placeholder="인증번호" spellcheck="false" type="number">
+            </label>
+            <input disabled class="_object-button" name="infoContactVerify" type="button" value="인증번호 확인">
+        </div>
+        <div class="__contact-counter-container" data-mz-counter>
+            <span class="__remaining">
+                <span class="__value" data-mz-counter-min>3</span>
+                <span class="__colon">:</span>
+                <span class="__value" data-mz-counter-sec>00</span>
+            </span>
+            <span class="__message">인증 문자가 오지 않나요?</span>
+            <a class="__retry" href="#" data-mz-counter-retry>다시 시도</a>
+        </div>
+        <span class="_object-warning" data-mz-warning="infoContact"></span>
+        <div class="multi-container">
+            <label class="_object-label _with-icon big">
+                <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.address-postal.png}">
+                <input readonly class="_object-input" maxlength="5" name="infoAddressPostal" placeholder="우편번호" spellcheck="false" type="text">
+            </label>
+            <input class="_object-button" name="infoAddressFind" type="button" value="우편번호 찾기">
+        </div>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.address-primary.png}">
+            <input readonly class="_object-input" maxlength="100" name="infoAddressPrimary" placeholder="기본 주소 ('우편번호 찾기' 버튼을 클릭해 주세요.)" spellcheck="false" type="text">
+        </label>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.address-secondary.png}">
+            <input class="_object-input" maxlength="100" name="infoAddressSecondary" placeholder="상세 주소(건물명, 동, 호수 등을 입력해 주세요.)" spellcheck="false" type="text">
+        </label>
+        <span class="_object-warning" data-mz-warning="infoAddress"></span>
+        <span class="_object-warning" data-mz-warning="infoCommon"></span>
+        <input hidden name="infoContactSalt" type="hidden">
+        <div class="button-container">
+            <input class="_object-button _concept" type="submit" value="다음">
+            <input class="_object-button" name="infoPrev" type="button" value="이전">
+            <input class="_object-button" type="button" value="취소" data-mz-close>
+        </div>
+    </div>
+    <div class="__body" data-mz-step="done">
+        <h2 class="title">이메일 인증</h2>
+        <span class="message">입력하신 이메일로 모든 회원가입 절차를 완료할 수 있는 링크를 포함한 이메일을 전송하였습니다.</span>
+        <span class="message">이메일 및 포함된 링크는 전송된 후 한 시간만 유효함으로 유의해 주시기 바랍니다. 해당 링크를 클릭하여 이메일 인증을 완료하여야만 로그인할 수 있음으로 반드시 이메일 인증을 끝마쳐 주시기 바랍니다.</span>
+        <span class="message">감사합니다.</span>
+        <div class="button-container">
+            <a class="_object-button" href="#" target="_blank" data-mz-email-link>이메일로 이동하기</a>
+            <input class="_object-button" type="submit" value="완료">
+            <input class="_object-button _concept" name="doneLogin" type="button" value="로그인하러 가기">
+        </div>
+    </div>
+</form>
+<form class="account-form __right-pane" id="accountForm" data-mz-step="info" th:if="${session != null && session.user != null}">
+    <div class="__title-container">
+        <h2 class="__text">개인 정보 수정</h2>
+        <img alt="" class="__close" data-mz-close th:src="@{/resources/images/index.__right-pane.close.png}">
+    </div>
+    <div class="__body" data-mz-step="address">
+    </div>
+    <div class="__body" data-mz-step="info">
+        <h2 class="title">개인 정보 수정</h2>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.email.png}">
+            <input disabled readonly class="_object-input" spellcheck="false" type="email" th:value="${session.user.getEmail()}">
+        </label>
+        <span class="message-box">이메일 주소는 변경할 수 없습니다.</span>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.password.png}">
+            <input class="_object-input" maxlength="50" name="infoCurrentPassword" placeholder="현재 비밀번호를 입력해 주세요." type="password">
+        </label>
+        <span class="_object-warning" data-mz-warning="infoCurrentPassword"></span>
+        <label class="_object-check-container">
+            <input class="_check-input" name="infoChangePassword" type="checkbox">
+            <span class="_checkbox"></span>
+            <span class="_text">비밀번호 변경하기</span>
+        </label>
+        <div class="post-check-container new-password-container">
+            <label class="_object-label _with-icon">
+                <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.password.png}">
+                <input class="_object-input" maxlength="50" name="infoPassword" placeholder="새로운 비밀번호를 입력해 주세요." type="password">
+            </label>
+            <span class="_object-warning" data-mz-warning="infoPassword"></span>
+            <label class="_object-label _with-icon">
+                <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.password.png}">
+                <input class="_object-input" maxlength="50" name="infoPasswordCheck" placeholder="새로운 비밀번호를 한 번 더 입력해 주세요." type="password">
+            </label>
+            <span class="_object-warning" data-mz-warning="infoPasswordCheck"></span>
+        </div>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.nickname.png}">
+            <input disabled readonly class="_object-input" spellcheck="false" type="text" th:value="${session.user.getNickname()}">
+        </label>
+        <span class="message-box">닉네임은 변경할 수 없습니다.</span>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.name.png}">
+            <input class="_object-input" maxlength="5" name="infoName" placeholder="이름(실명)을 입력해 주세요." spellcheck="false" type="text" th:value="${session.user.getName()}">
+        </label>
+        <span class="_object-warning" data-mz-warning="infoName"></span>
+        <label class="_object-label _with-icon big">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.contact.png}">
+            <input disabled readonly class="_object-input" name="infoCurrentContact" spellcheck="false" type="tel" th:value="${session.user.getContact()}">
+        </label>
+        <label class="_object-check-container">
+            <input class="_check-input" name="infoChangeContact" type="checkbox">
+            <span class="_checkbox"></span>
+            <span class="_text">연락처 변경하기</span>
+        </label>
+        <div class="post-check-container new-contact-container">
+            <div class="multi-container">
+                <label class="_object-label _with-icon big">
+                    <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.contact.png}">
+                    <input class="_object-input" maxlength="12" name="infoContact" placeholder="연락처 ('-' 없이)" spellcheck="false" type="tel">
+                </label>
+                <input class="_object-button" name="infoContactSend" type="button" value="인증번호 전송">
+            </div>
+            <div class="multi-container">
+                <label class="_object-label _with-icon big">
+                    <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.contact-code.png}">
+                    <input disabled class="_object-input" maxlength="6" name="infoContactCode" placeholder="인증번호" spellcheck="false" type="number">
+                </label>
+                <input disabled class="_object-button" name="infoContactVerify" type="button" value="인증번호 확인">
+            </div>
+            <div class="__contact-counter-container" data-mz-counter>
+            <span class="__remaining">
+                <span class="__value" data-mz-counter-min>3</span>
+                <span class="__colon">:</span>
+                <span class="__value" data-mz-counter-sec>00</span>
+            </span>
+                <span class="__message">인증 문자가 오지 않나요?</span>
+                <a class="__retry" href="#" data-mz-counter-retry>다시 시도</a>
+            </div>
+            <span class="_object-warning" data-mz-warning="infoContact"></span>
+        </div>
+        <div class="multi-container">
+            <label class="_object-label _with-icon big">
+                <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.address-postal.png}">
+                <input readonly class="_object-input" maxlength="5" name="infoAddressPostal" placeholder="우편번호" spellcheck="false" type="text" th:value="${session.user.getAddressPostal()}">
+            </label>
+            <input class="_object-button" name="infoAddressFind" type="button" value="우편번호 찾기">
+        </div>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.address-primary.png}">
+            <input readonly class="_object-input" maxlength="100" name="infoAddressPrimary" placeholder="기본 주소 ('우편번호 찾기' 버튼을 클릭해 주세요.)" spellcheck="false" type="text" th:value="${session.user.getAddressPrimary()}">
+        </label>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.address-secondary.png}">
+            <input class="_object-input" maxlength="100" name="infoAddressSecondary" placeholder="상세 주소(건물명, 동, 호수 등을 입력해 주세요.)" spellcheck="false" type="text" th:value="${session.user.getAddressSecondary()}">
+        </label>
+        <span class="_object-warning" data-mz-warning="infoAddress"></span>
+        <span class="_object-warning" data-mz-warning="infoCommon"></span>
+        <input hidden name="infoContactSalt" type="hidden">
+        <div class="button-container">
+            <input class="_object-button _concept" type="submit" value="개인 정보 수정">
+            <input class="_object-button" type="button" value="취소" data-mz-close>
+            <input class="_object-button _red" name="terminate" type="button" value="회원 탈퇴">
+        </div>
+    </div>
+</form>
+<form class="recover-form __right-pane" id="recoverForm" data-mz-choice="email">
+    <div class="__title-container">
+        <h2 class="__text">계정 찾기</h2>
+        <img alt="" class="__close" data-mz-close th:src="@{/resources/images/index.__right-pane.close.png}">
+    </div>
+    <div class="choice-container">
+        <label class="choice">
+            <input checked class="input" name="choice" type="radio" value="email">
+            <span class="text">이메일 찾기</span>
+            <span class="desc">회원가입시 입력한 이름(실명)과 연락처를 통해 이메일을 찾습니다.</span>
+        </label>
+        <label class="choice">
+            <input class="input" name="choice" type="radio" value="password">
+            <span class="text">비밀번호 재설정</span>
+            <span class="desc">회원가입시 입력한 이름(실명)과 이메일로 비밀번호를 재설정할 수 있는 인증번호(32자)를 포함한 이메일을 전송해 드립니다.</span>
+        </label>
+    </div>
+    <div class="__body" data-mz-choice="email">
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.name.png}">
+            <input class="_object-input" maxlength="5" name="emailName" placeholder="이름(실명)을 입력해 주세요." spellcheck="false" type="text">
+        </label>
+        <span class="_object-warning" data-mz-warning="emailName"></span>
+        <div class="multi-container">
+            <label class="_object-label _with-icon big">
+                <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.contact.png}">
+                <input class="_object-input" maxlength="12" name="emailContact" placeholder="연락처 ('-' 없이)" spellcheck="false" type="tel">
+            </label>
+            <input class="_object-button" name="emailContactSend" type="button" value="인증번호 전송">
+        </div>
+        <div class="multi-container">
+            <label class="_object-label _with-icon big">
+                <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.contact-code.png}">
+                <input disabled class="_object-input" maxlength="6" name="emailContactCode" placeholder="인증번호" spellcheck="false" type="number">
+            </label>
+            <input disabled class="_object-button" name="emailContactVerify" type="button" value="인증번호 확인">
+        </div>
+        <div class="__contact-counter-container" data-mz-counter="emailContactCounter">
+            <span class="__remaining">
+                <span class="__value" data-mz-counter-min>3</span>
+                <span class="__colon">:</span>
+                <span class="__value" data-mz-counter-sec>00</span>
+            </span>
+            <span class="__message">인증 문자가 오지 않나요?</span>
+            <a class="__retry" href="#" data-mz-counter-retry>다시 시도</a>
+        </div>
+        <span class="_object-warning" data-mz-warning="emailContact"></span>
+        <span class="_object-warning" data-mz-warning="emailCommon"></span>
+        <input hidden name="emailContactSalt" type="hidden">
+        <div class="button-container">
+            <input class="_object-button" name="emailRetry" type="button" value="초기화">
+            <input class="_object-button _concept" name="emailSubmit" type="submit" value="이메일 찾기" visible>
+            <input class="_object-button" type="button" value="취소" data-mz-close>
+        </div>
+    </div>
+    <div class="__body" data-mz-choice="password">
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.name.png}">
+            <input class="_object-input" maxlength="5" name="passwordName" placeholder="이름(실명)을 입력해 주세요." spellcheck="false" type="text">
+        </label>
+        <span class="_object-warning" data-mz-warning="passwordName"></span>
+        <div class="multi-container">
+            <label class="_object-label _with-icon big">
+                <img alt="" class="_icon" th:src="@{/resources/images/index.loginForm.email.png}">
+                <input class="_object-input" maxlength="50" name="passwordEmail" placeholder="이메일을 입력해 주세요." spellcheck="false" type="email">
+            </label>
+            <input class="_object-button" name="passwordEmailSend" type="button" value="인증번호 전송">
+        </div>
+        <div class="multi-container">
+            <label class="_object-label _with-icon big">
+                <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.contact-code.png}">
+                <input disabled class="_object-input" maxlength="32" name="passwordEmailCode" placeholder="인증번호" type="text">
+            </label>
+            <input disabled class="_object-button" name="passwordEmailVerify" type="button" value="인증번호 확인">
+        </div>
+        <div class="__contact-counter-container" data-mz-counter="passwordEmailCounter">
+            <span class="__remaining">
+                <span class="__value" data-mz-counter-min>10</span>
+                <span class="__colon">:</span>
+                <span class="__value" data-mz-counter-sec>00</span>
+            </span>
+            <span class="__message">인증 이메일이 오지 않나요?</span>
+            <a class="__retry" href="#" data-mz-counter-retry>다시 시도</a>
+        </div>
+        <span class="_object-warning" data-mz-warning="passwordEmail"></span>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.password.png}">
+            <input disabled class="_object-input" maxlength="50" name="passwordPassword" placeholder="새로운 비밀번호를 입력해 주세요." type="password">
+        </label>
+        <span class="_object-warning" data-mz-warning="passwordPassword"></span>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.registerForm.password.png}">
+            <input disabled class="_object-input" maxlength="50" name="passwordPasswordCheck" placeholder="새로운 비밀번호를 한 번 더 입력해 주세요." type="password">
+        </label>
+        <span class="_object-warning" data-mz-warning="passwordPasswordCheck"></span>
+        <span class="_object-warning" data-mz-warning="passwordCommon"></span>
+        <input hidden name="passwordEmailSalt" type="hidden">
+        <div class="button-container">
+            <input class="_object-button" name="passwordRetry" type="button" value="초기화">
+            <input class="_object-button _concept" name="passwordSubmit" type="submit" value="비밀번호 재설정">
+            <input class="_object-button" type="button" value="취소" data-mz-close>
+        </div>
+    </div>
+</form>
+<form class="place-add-form __right-pane" id="placeAddForm" data-mz-step="add">
+    <div class="__title-container">
+        <h2 class="__text">맛집 추가</h2>
+        <img alt="" class="__close" th:src="@{/resources/images/index.__right-pane.close.png}" data-mz-close>
+    </div>
+    <div class="__body" data-mz-step="address"></div>
+    <div class="__body" data-mz-step="add">
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.placeAddForm.name.png}">
+            <input class="_object-input" maxlength="25" name="name" placeholder="이름을 입력해 주세요." spellcheck="false" type="text">
+        </label>
+        <span class="_object-warning" data-mz-warning="name"></span>
+        <label class="_object-label _with-icon big">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.placeAddForm.contact.png}">
+            <input class="_object-input" maxlength="12" name="contact" placeholder="연락처 ('-' 없이)" spellcheck="false" type="tel">
+        </label>
+        <span class="_object-warning" data-mz-warning="contact"></span>
+        <div class="multi-container">
+            <label class="_object-label _with-icon big">
+                <img alt="" class="_icon" th:src="@{/resources/images/index.placeAddForm.address-postal.png}">
+                <input readonly class="_object-input" maxlength="5" name="addressPostal" placeholder="우편번호" spellcheck="false" type="text">
+            </label>
+            <input class="_object-button" name="addressFind" type="button" value="우편번호 찾기">
+        </div>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.placeAddForm.address-primary.png}">
+            <input readonly class="_object-input" maxlength="100" name="addressPrimary" placeholder="기본 주소 ('우편번호 찾기' 버튼을 클릭해 주세요.)" spellcheck="false" type="text">
+        </label>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.placeAddForm.address-secondary.png}">
+            <input class="_object-input" maxlength="100" name="addressSecondary" placeholder="상세 주소(건물명, 동, 호수 등을 입력해 주세요.)" spellcheck="false" type="text">
+        </label>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.placeAddForm.lat.png}">
+            <input readonly class="_object-input" name="lat" spellcheck="false" type="text">
+        </label>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.placeAddForm.lng.png}">
+            <input readonly class="_object-input" name="lng" spellcheck="false" type="text">
+        </label>
+        <span class="_object-warning" data-mz-warning="address"></span>
+        <span class="message-box">위도와 경도는 지도를 움직이거나 위 '우편번호 찾기' 기능을 통해 자동으로 완성할 수 있습니다.</span>
+        <div class="thumbnail" data-mz-thumbnail-container="empty">
+            <div class="empty">대표 이미지를 선택해 주세요.</div>
+        </div>
+        <input hidden accept="image/*" name="thumbnail" type="file">
+        <span class="_object-warning" data-mz-warning="thumbnail"></span>
+        <table class="time-table">
+            <thead>
+            <tr>
+                <th>요일</th>
+                <th>오픈</th>
+                <th>마감</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-mz-time-day="sun">
+                <th>
+                    <label class="_object-check-container">
+                        <input checked class="_check-input" name="sunOperating" type="checkbox">
+                        <span class="_checkbox"></span>
+                        <span class="_text">일</span>
+                    </label>
+                </th>
+                <td>
+                    <input name="sunOpen" type="time">
+                </td>
+                <td>
+                    <input name="sunClose" type="time">
+                </td>
+            </tr>
+            <tr data-mz-time-day="mon">
+                <th>
+                    <label class="_object-check-container">
+                        <input checked class="_check-input" name="monOperating" type="checkbox">
+                        <span class="_checkbox"></span>
+                        <span class="_text">월</span>
+                    </label>
+                </th>
+                <td>
+                    <input name="monOpen" type="time">
+                </td>
+                <td>
+                    <input name="monClose" type="time">
+                </td>
+            </tr>
+            <tr data-mz-time-day="tue">
+                <th>
+                    <label class="_object-check-container">
+                        <input checked class="_check-input" name="tueOperating" type="checkbox">
+                        <span class="_checkbox"></span>
+                        <span class="_text">화</span>
+                    </label>
+                </th>
+                <td>
+                    <input name="tueOpen" type="time">
+                </td>
+                <td>
+                    <input name="tueClose" type="time">
+                </td>
+            </tr>
+            <tr data-mz-time-day="wed">
+                <th>
+                    <label class="_object-check-container">
+                        <input checked class="_check-input" name="wedOperating" type="checkbox">
+                        <span class="_checkbox"></span>
+                        <span class="_text">수</span>
+                    </label>
+                </th>
+                <td>
+                    <input name="wedOpen" type="time">
+                </td>
+                <td>
+                    <input name="wedClose" type="time">
+                </td>
+            </tr>
+            <tr data-mz-time-day="thu">
+                <th>
+                    <label class="_object-check-container">
+                        <input checked class="_check-input" name="thuOperating" type="checkbox">
+                        <span class="_checkbox"></span>
+                        <span class="_text">목</span>
+                    </label>
+                </th>
+                <td>
+                    <input name="thuOpen" type="time">
+                </td>
+                <td>
+                    <input name="thuClose" type="time">
+                </td>
+            </tr>
+            <tr data-mz-time-day="fri">
+                <th>
+                    <label class="_object-check-container">
+                        <input checked class="_check-input" name="friOperating" type="checkbox">
+                        <span class="_checkbox"></span>
+                        <span class="_text">금</span>
+                    </label>
+                </th>
+                <td>
+                    <input name="friOpen" type="time">
+                </td>
+                <td>
+                    <input name="friClose" type="time">
+                </td>
+            </tr>
+            <tr data-mz-time-day="sat">
+                <th>
+                    <label class="_object-check-container">
+                        <input checked class="_check-input" name="satOperating" type="checkbox">
+                        <span class="_checkbox"></span>
+                        <span class="_text">토</span>
+                    </label>
+                </th>
+                <td>
+                    <input name="satOpen" type="time">
+                </td>
+                <td>
+                    <input name="satClose" type="time">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <span class="_object-warning" data-mz-warning="time"></span>
+        <label class="_object-label">
+            <textarea class="_object-textarea _no-resize" name="description" placeholder="설명을 입력해 주세요." rows="6"></textarea>
+        </label>
+        <span class="_object-warning" data-mz-warning="description"></span>
+        <span class="_object-warning" data-mz-warning="common"></span>
+        <div class="button-container">
+            <input class="_object-button _concept" type="submit" value="추가">
+            <input class="_object-button" type="button" value="취소" data-mz-close>
+        </div>
+    </div>
+</form>
+<form class="place-edit-form __right-pane" id="placeEditForm" data-mz-step="edit">
+    <div class="__title-container">
+        <h2 class="__text">맛집 수정</h2>
+        <img alt="" class="__close" th:src="@{/resources/images/index.__right-pane.close.png}" data-mz-close>
+    </div>
+    <div class="__body" data-mz-step="address"></div>
+    <div class="__body" data-mz-step="edit">
+        <input hidden name="index" type="hidden">
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.placeEditForm.name.png}">
+            <input class="_object-input" maxlength="25" name="name" placeholder="이름을 입력해 주세요." spellcheck="false" type="text">
+        </label>
+        <span class="_object-warning" data-mz-warning="name"></span>
+        <label class="_object-label _with-icon big">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.placeEditForm.contact.png}">
+            <input class="_object-input" maxlength="12" name="contact" placeholder="연락처 ('-' 없이)" spellcheck="false" type="tel">
+        </label>
+        <span class="_object-warning" data-mz-warning="contact"></span>
+        <div class="multi-container">
+            <label class="_object-label _with-icon big">
+                <img alt="" class="_icon" th:src="@{/resources/images/index.placeEditForm.address-postal.png}">
+                <input readonly class="_object-input" maxlength="5" name="addressPostal" placeholder="우편번호" spellcheck="false" type="text">
+            </label>
+            <input class="_object-button" name="addressFind" type="button" value="우편번호 찾기">
+        </div>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.placeEditForm.address-primary.png}">
+            <input readonly class="_object-input" maxlength="100" name="addressPrimary" placeholder="기본 주소 ('우편번호 찾기' 버튼을 클릭해 주세요.)" spellcheck="false" type="text">
+        </label>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.placeEditForm.address-secondary.png}">
+            <input class="_object-input" maxlength="100" name="addressSecondary" placeholder="상세 주소(건물명, 동, 호수 등을 입력해 주세요.)" spellcheck="false" type="text">
+        </label>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.placeEditForm.lat.png}">
+            <input readonly class="_object-input" name="lat" spellcheck="false" type="text">
+        </label>
+        <label class="_object-label _with-icon">
+            <img alt="" class="_icon" th:src="@{/resources/images/index.placeEditForm.lng.png}">
+            <input readonly class="_object-input" name="lng" spellcheck="false" type="text">
+        </label>
+        <span class="_object-warning" data-mz-warning="address"></span>
+        <span class="message-box">위도와 경도는 지도를 움직이거나 위 '우편번호 찾기' 기능을 통해 자동으로 완성할 수 있습니다.</span>
+        <div class="thumbnail" data-mz-thumbnail-container></div>
+        <input hidden accept="image/*" name="thumbnail" type="file">
+        <span class="_object-warning" data-mz-warning="thumbnail"></span>
+        <table class="time-table">
+            <thead>
+            <tr>
+                <th>요일</th>
+                <th>오픈</th>
+                <th>마감</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-mz-time-day="sun">
+                <th>
+                    <label class="_object-check-container">
+                        <input checked class="_check-input" name="sunOperating" type="checkbox">
+                        <span class="_checkbox"></span>
+                        <span class="_text">일</span>
+                    </label>
+                </th>
+                <td>
+                    <input name="sunOpen" type="time">
+                </td>
+                <td>
+                    <input name="sunClose" type="time">
+                </td>
+            </tr>
+            <tr data-mz-time-day="mon">
+                <th>
+                    <label class="_object-check-container">
+                        <input checked class="_check-input" name="monOperating" type="checkbox">
+                        <span class="_checkbox"></span>
+                        <span class="_text">월</span>
+                    </label>
+                </th>
+                <td>
+                    <input name="monOpen" type="time">
+                </td>
+                <td>
+                    <input name="monClose" type="time">
+                </td>
+            </tr>
+            <tr data-mz-time-day="tue">
+                <th>
+                    <label class="_object-check-container">
+                        <input checked class="_check-input" name="tueOperating" type="checkbox">
+                        <span class="_checkbox"></span>
+                        <span class="_text">화</span>
+                    </label>
+                </th>
+                <td>
+                    <input name="tueOpen" type="time">
+                </td>
+                <td>
+                    <input name="tueClose" type="time">
+                </td>
+            </tr>
+            <tr data-mz-time-day="wed">
+                <th>
+                    <label class="_object-check-container">
+                        <input checked class="_check-input" name="wedOperating" type="checkbox">
+                        <span class="_checkbox"></span>
+                        <span class="_text">수</span>
+                    </label>
+                </th>
+                <td>
+                    <input name="wedOpen" type="time">
+                </td>
+                <td>
+                    <input name="wedClose" type="time">
+                </td>
+            </tr>
+            <tr data-mz-time-day="thu">
+                <th>
+                    <label class="_object-check-container">
+                        <input checked class="_check-input" name="thuOperating" type="checkbox">
+                        <span class="_checkbox"></span>
+                        <span class="_text">목</span>
+                    </label>
+                </th>
+                <td>
+                    <input name="thuOpen" type="time">
+                </td>
+                <td>
+                    <input name="thuClose" type="time">
+                </td>
+            </tr>
+            <tr data-mz-time-day="fri">
+                <th>
+                    <label class="_object-check-container">
+                        <input checked class="_check-input" name="friOperating" type="checkbox">
+                        <span class="_checkbox"></span>
+                        <span class="_text">금</span>
+                    </label>
+                </th>
+                <td>
+                    <input name="friOpen" type="time">
+                </td>
+                <td>
+                    <input name="friClose" type="time">
+                </td>
+            </tr>
+            <tr data-mz-time-day="sat">
+                <th>
+                    <label class="_object-check-container">
+                        <input checked class="_check-input" name="satOperating" type="checkbox">
+                        <span class="_checkbox"></span>
+                        <span class="_text">토</span>
+                    </label>
+                </th>
+                <td>
+                    <input name="satOpen" type="time">
+                </td>
+                <td>
+                    <input name="satClose" type="time">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <span class="_object-warning" data-mz-warning="time"></span>
+        <label class="_object-label">
+            <textarea class="_object-textarea _no-resize" name="description" placeholder="설명을 입력해 주세요." rows="6"></textarea>
+        </label>
+        <span class="_object-warning" data-mz-warning="description"></span>
+        <span class="_object-warning" data-mz-warning="common"></span>
+        <div class="button-container">
+            <input class="_object-button _concept" type="submit" value="수정">
+            <input class="_object-button" type="button" value="취소" data-mz-close>
+        </div>
+    </div>
+</form>
+<nav id="menu">
+    <a class="item logo" th:href="@{/}">
+        <img alt="맛집" class="image" th:src="@{/resources/images/_logo.png}">
+    </a>
+    <ul class="menu main" data-mz-menu="main">
+        <li class="item" selected data-mz-item="matzip">
+            <img alt="" class="icon" th:src="@{/resources/images/index.nav.main-menu.place.png}">
+            <span class="text">맛집</span>
+        </li>
+        <li class="item" data-mz-item="save">
+            <img alt="" class="icon" th:src="@{/resources/images/index.nav.main-menu.save.png}">
+            <span class="text">저장</span>
+        </li>
+    </ul>
+    <ul class="menu sub" data-mz-menu="sub">
+        <li class="item" data-mz-item="login" th:if="${session.user == null}">
+            <img alt="" class="icon" th:src="@{/resources/images/index.nav.sub-menu.login.png}">
+            <span class="text">로그인</span>
+        </li>
+        <li class="item" data-mz-item="account" th:if="${session.user != null}">
+            <img alt="" class="icon" th:src="@{/resources/images/index.nav.sub-menu.account.png}">
+            <span class="text">계정</span>
+        </li>
+        <li class="item" data-mz-item="logout" th:if="${session.user != null}">
+            <img alt="" class="icon" th:src="@{/resources/images/index.nav.sub-menu.logout.png}">
+            <span class="text">로그아웃</span>
+        </li>
+        <li class="item" data-mz-item="help">
+            <img alt="" class="icon" th:src="@{/resources/images/index.nav.sub-menu.help.png}">
+            <span class="text">고객센터</span>
+        </li>
+    </ul>
+</nav>
+<section id="place" visible>
+    <div class="head">
+        <form class="search-form" id="placeSearchForm">
+            <label class="label">
+                <img alt="" class="icon" th:src="@{/resources/images/index.place.search-form.keyword.png}">
+                <input autofocus class="input" maxlength="50" name="keyword" placeholder="맛집 검색" spellcheck="false" type="text">
+            </label>
+        </form>
+        <div class="address-container">
+            <span class="value" data-mz-address="s">잠시만 기다려 주세요...</span>
+            <span class="value" data-mz-address="g"></span>
+            <span class="value" data-mz-address="d"></span>
+        </div>
+        <div class="weather-container" data-mz-weather="loading">
+            <div class="loading">날씨 정보를 불러오고 있습니다...</div>
+        </div>
+    </div>
+    <ul class="menu" data-mz-place-menu>
+        <li class="item" data-mz-item="add">
+            <img alt="" class="icon" th:src="@{/resources/images/index.place.menu.add.png}">
+            <span class="text">맛집 추가하기</span>
+        </li>
+    </ul>
+    <ul class="__place-list" data-mz-place-list>
+        <li class="__issue" data-mz-issue="empty">
+            <img alt="" class="__icon" th:src="@{'/resources/images/index.place.issue.empty.png'}">
+            <span class="__message">이곳에는 표시할 맛집이 없어요.<br>지도를 옮기거나 맛집을 추가해 보세요!</span>
+        </li>
+        <li class="__issue" data-mz-issue="tooMuch">
+            <img alt="" class="__icon" th:src="@{'/resources/images/index.place.issue.too-much.png.png'}">
+            <span class="__message">지도가 너무 축소된 상태에요.<br>지도를 확대해 주세요!</span>
+        </li>
+    </ul>
+</section>
+<section id="save">
+    <div class="head">
+        <form class="search-form" id="saveSearchForm">
+            <label class="label">
+                <img alt="" class="icon" th:src="@{/resources/images/index.place.search-form.keyword.png}">
+                <input autofocus class="input" maxlength="50" name="keyword" placeholder="맛집 검색" spellcheck="false" type="text">
+            </label>
+        </form>
+        <div class="address-container">
+            <span class="value" data-mz-address="s">잠시만 기다려 주세요...</span>
+            <span class="value" data-mz-address="g"></span>
+            <span class="value" data-mz-address="d"></span>
+        </div>
+        <div class="weather-container" data-mz-weather="loading">
+            <div class="loading">날씨 정보를 불러오고 있습니다...</div>
+        </div>
+    </div>
+    <ul class="__place-list" data-mz-save-list>
+        <li class="__issue" data-mz-issue="error">
+            <img alt="" class="__icon" th:src="@{'/resources/images/index.place.issue.too-much.png.png'}">
+            <span class="__message">저장된 맛집을 불러오지 못했어요.<br><a class="__link" href="#" data-mz-refresh>다시 시도하기</a></span>
+        </li>
+        <li class="__issue" data-mz-issue="notSigned">
+            <img alt="" class="__icon" th:src="@{'/resources/images/index.place.issue.too-much.png.png'}">
+            <span class="__message">로그인하여 나만의 맛집을 관리해보세요!<br><a class="__link" href="#" data-mz-login>로그인</a></span>
+        </li>
+        <li class="__issue" data-mz-issue="empty">
+            <img alt="" class="__icon" th:src="@{'/resources/images/index.save.issue.empty.png'}">
+            <span class="__message">저장된 맛집이 없어요.<br>관심있는 맛집을 저장해 보세요!</span>
+        </li>
+    </ul>
+</section>
+<section class="detail" id="detail">
+    <div class="head">
+        <span class="name" data-mz-field="name"></span>
+        <img alt="X" class="close" th:src="@{/resources/images/index.detail.close.png}" data-mz-close>
+    </div>
+    <div class="image-container">
+        <img alt="" class="image thumbnail" data-mz-thumbnail visible>
+        <img alt="" class="image" data-mz-head-image>
+        <img alt="" class="image" data-mz-head-image>
+        <img alt="" class="image" data-mz-head-image>
+        <img alt="" class="image" data-mz-head-image>
+    </div>
+    <div class="spec-container">
+        <span class="name">
+            <span class="text" data-mz-field="name"></span>
+            <a class="report" href="#" data-mz-button="report">
+                <img alt="" class="icon" th:src="@{/resources/images/index.detail.spec.report.png}">
+                <span class="text">신고</span>
+            </a>
+        </span>
+        <div class="review-container">
+            <div class="rating-container">
+                <img alt="" class="star" th:src="@{/resources/images/index.detail.review.rating.star.png}">
+                <span class="rating" data-mz-rating-average>4.39</span>
+                <span class="perfect">/5</span>
+            </div>
+            <span class="review-count" data-mz-rating-count>리뷰 3,243</span>
+        </div>
+        <span class="description" data-mz-field="description">sdfsdf</span>
+    </div>
+    <div class="button-container">
+        <a class="button" href="#" data-mz-button="call" visible>
+            <img alt="" class="icon" th:src="@{/resources/images/_call.png}">
+            <span class="text">전화</span>
+        </a>
+        <a class="button" href="#" data-mz-button="save" visible>
+            <img alt="" class="icon save" th:src="@{/resources/images/_save.png}">
+            <img alt="" class="icon saved" th:src="@{/resources/images/_saved.png}">
+            <span class="text">저장</span>
+        </a>
+        <a class="button" href="#" data-mz-button="delete">
+            <img alt="" class="icon" th:src="@{/resources/images/_delete.png}">
+            <span class="text">삭제</span>
+        </a>
+        <a class="button" href="#" data-mz-button="edit">
+            <img alt="" class="icon" th:src="@{/resources/images/_edit.png}">
+            <span class="text">수정</span>
+        </a>
+    </div>
+    <table class="time-table">
+        <thead>
+        <tr>
+            <th>요일</th>
+            <th>오픈</th>
+            <th>마감</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-mz-time-day="sun">
+            <th>일</th>
+            <td colspan="2" data-mz-time-off>휴무</td>
+            <td data-mz-time-open>09:00</td>
+            <td data-mz-time-close>21:00</td>
+        </tr>
+        <tr data-mz-time-day="mon">
+            <th>월</th>
+            <td colspan="2" data-mz-time-off>휴무</td>
+            <td data-mz-time-open>09:00</td>
+            <td data-mz-time-close>21:00</td>
+        </tr>
+        <tr data-mz-time-day="tue">
+            <th>화</th>
+            <td colspan="2" data-mz-time-off>휴무</td>
+            <td data-mz-time-open>09:00</td>
+            <td data-mz-time-close>21:00</td>
+        </tr>
+        <tr data-mz-time-day="wed">
+            <th>수</th>
+            <td colspan="2" data-mz-time-off>휴무</td>
+            <td data-mz-time-open>09:00</td>
+            <td data-mz-time-close>21:00</td>
+        </tr>
+        <tr data-mz-time-day="thu">
+            <th>목</th>
+            <td colspan="2" data-mz-time-off>휴무</td>
+            <td data-mz-time-open>09:00</td>
+            <td data-mz-time-close>21:00</td>
+        </tr>
+        <tr data-mz-time-day="fri">
+            <th>금</th>
+            <td colspan="2" data-mz-time-off>휴무</td>
+            <td data-mz-time-open>09:00</td>
+            <td data-mz-time-close>21:00</td>
+        </tr>
+        <tr data-mz-time-day="sat">
+            <th>토</th>
+            <td colspan="2" data-mz-time-off>휴무</td>
+            <td data-mz-time-open>09:00</td>
+            <td data-mz-time-close>21:00</td>
+        </tr>
+        </tbody>
+    </table>
+    <form class="review-form" id="reviewForm" th:if="${session.user != null}">
+        <input hidden name="placeIndex" type="hidden" value="1">
+        <div class="rating-container">
+            <label class="_object-label">
+                <span class="text">평점</span>
+                <select name="rating">
+                    <option selected value="5">★★★★★</option>
+                    <option value="4">★★★★☆</option>
+                    <option value="3">★★★☆☆</option>
+                    <option value="2">★★☆☆☆</option>
+                    <option value="1">★☆☆☆☆</option>
+                </select>
+            </label>
+            <label class="_object-label">
+                <span class="text">방문일</span>
+                <input name="visit" type="date">
+            </label>
+        </div>
+        <label class="_object-label">
+            <textarea autocomplete="off" class="input content" maxlength="1000" name="content" placeholder="리뷰를 작성해 주세요. 욕설, 정치, 종교 등 민감한 주제 및 근거 없는 비방은 활동 정지 등 제재 조치될 수 있음으로 유의해 주세요." rows="3" spellcheck="false"></textarea>
+        </label>
+        <input hidden multiple accept="image/*" name="images" type="file">
+        <div class="image-container" data-mz-image-container>
+            <a class="add-button" data-mz-image-add-button>
+                <img alt="" class="icon" th:src="@{/resources/images/index.detail.review.image.add.png}">
+                <span class="text">이미지 추가</span>
+            </a>
+            <div class="empty" data-mz-empty visible>추가된 이미지가 없습니다.</div>
+        </div>
+        <span class="_object-warning" data-mz-warning="common"></span>
+        <div class="button-container">
+            <input class="submit" type="submit" value="작성">
+        </div>
+    </form>
+    <ul class="review-container" data-mz-review-list>
+        <li class="issue" data-mz-issue="error">
+            <img alt="" class="icon" th:src="@{/resources/images/index.detail.review.issue.error.png}">
+            <span class="message">리뷰를 불러오지 못했어요.<br>잠시 후 다시 시도해 주세요.</span>
+        </li>
+        <li class="issue" data-mz-issue="empty">
+            <img alt="" class="icon" th:src="@{/resources/images/index.detail.review.issue.empty.png}">
+            <span class="message">아직 리뷰가 없어요.<br>리뷰를 작성해 주세요.</span>
+        </li>
+    </ul>
+</section>
+<div id="map" data-mz-mode>
+    <div class="cover"></div>
+    <div class="pin">
+        <img alt="" class="icon" th:src="@{/resources/images/map.pin.png}">
+        <div class="radar"></div>
+        <div class="radar"></div>
+    </div>
+    지도를 불러오는 중입니다...
+</div>
+</body>
+</html>

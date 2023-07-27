@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dev.yhpark.matzip.mappers.PlaceMapper">
+    <delete id="deletePlace">
+        DELETE
+        FROM `matzip_new`.`places`
+        WHERE `index` = #{index}
+        LIMIT 1
+    </delete>
+
+    <delete id="deletePlaceSave">
+        DELETE
+        FROM `matzip_new`.`place_saves`
+        WHERE `user_index` = #{userIndex}
+          AND `place_index` = #{placeIndex}
+        LIMIT 1
+    </delete>
+
+    <delete id="deleteReviewLikeByUserIndexReviewIndex">
+        DELETE
+        FROM `matzip_new`.`review_likes`
+        WHERE `user_index` = #{userIndex}
+          AND `review_index` = #{reviewIndex}
+        LIMIT 1
+    </delete>
+
+    <insert id="insertPlace"
+            useGeneratedKeys="true"
+            keyColumn="index"
+            keyProperty="index"
+            parameterType="dev.yhpark.matzip.entities.PlaceEntity">
+        INSERT INTO `matzip_new`.`places` (`user_index`, `name`, `contact`, `address_postal`, `address_primary`, `address_secondary`, `lat`, `lng`, `thumbnail`, `thumbnail_content_type`, `time`, `description`)
+        VALUES (#{userIndex}, #{name}, #{contact}, #{addressPostal}, #{addressPrimary}, #{addressSecondary}, #{lat}, #{lng}, #{thumbnail}, #{thumbnailContentType}, #{time}, #{description})
+    </insert>
+
+    <insert id="insertPlaceSave"
+            parameterType="dev.yhpark.matzip.entities.PlaceSaveEntity">
+        INSERT INTO `matzip_new`.`place_saves` (`user_index`, `place_index`, `created_at`)
+        VALUES (#{userIndex},
+                #{placeIndex},
+                IFNULL(#{createdAt}, DEFAULT(`created_at`)))
+    </insert>
+
+    <insert id="insertReport"
+            useGeneratedKeys="true"
+            keyColumn="index"
+            keyProperty="index"
+            parameterType="dev.yhpark.matzip.entities.ReportEntity">
+        INSERT INTO `matzip_new`.`reports` (`user_index`, `target_type`, `target_reference`, `status`, `created_at`)
+        VALUES (#{userIndex},
+                #{targetType},
+                #{targetReference},
+                #{status},
+                IFNULL(#{createdAt}, DEFAULT(`created_at`)))
+    </insert>
+
+    <insert id="insertReview"
+            useGeneratedKeys="true"
+            keyColumn="index"
+            keyProperty="index"
+            parameterType="dev.yhpark.matzip.entities.ReviewEntity">
+        INSERT INTO `matzip_new`.`reviews` (`user_index`, `place_index`, `rating`, `visit`, `content`, `written_at`, `deleted_flag`)
+        VALUES (#{userIndex},
+                #{placeIndex},
+                #{rating},
+                #{visit},
+                #{content},
+                IFNULL(#{writtenAt}, DEFAULT(`written_at`)),
+                #{isDeleted})
+    </insert>
+
+    <insert id="insertReviewImage"
+            useGeneratedKeys="true"
+            keyColumn="index"
+            keyProperty="index"
+            parameterType="dev.yhpark.matzip.entities.ReviewImageEntity">
+        INSERT INTO `matzip_new`.`review_images` (`review_index`, `data`, `data_type`)
+        VALUES (#{reviewIndex}, #{data}, #{dataType})
+    </insert>
+
+    <insert id="insertWeatherKeyUpdate"
+            useGeneratedKeys="true"
+            keyColumn="index"
+            keyProperty="index"
+            parameterType="dev.yhpark.matzip.entities.WeatherEntity">
+        INSERT INTO `matzip_new`.`weathers` (`datetime`, `x`, `y`, `temperature`, `precipitation`, `humidity`, `precipitation_type`, `sky_type`)
+        VALUES (#{datetime}, #{x}, #{y}, #{temperature}, #{precipitation}, #{humidity}, #{precipitationType}, #{skyType})
+        ON DUPLICATE KEY UPDATE `datetime`           = #{datetime},
+                                `x`                  = #{x},
+                                `y`                  = #{y},
+                                `temperature`        = #{temperature},
+                                `precipitation`      = #{precipitation},
+                                `humidity`           = #{humidity},
+                                `precipitation_type` = #{precipitationType},
+                                `sky_type`           = #{skyType}
+    </insert>
+
+    <insert id="insertReviewLike"
+            parameterType="dev.yhpark.matzip.entities.ReviewLikeEntity">
+        INSERT INTO `matzip_new`.`review_likes` (`user_index`, `review_index`, `liked_at`)
+        VALUES (#{userIndex},
+                #{reviewIndex},
+                IFNULL(#{likedAt}, DEFAULT(`liked_at`)))
+    </insert>
+
+    <select id="selectPlaceByIndex"
+            resultType="dev.yhpark.matzip.entities.PlaceEntity">
+        SELECT `index`                  AS `index`,
+               `user_index`             AS `userIndex`,
+               `name`                   AS `name`,
+               `contact`                AS `contact`,
+               `address_postal`         AS `addressPostal`,
+               `address_primary`        AS `addressPrimary`,
+               `address_secondary`      AS `addressSecondary`,
+               `lat`                    AS `lat`,
+               `lng`                    AS `lng`,
+               `thumbnail`              AS `thumbnail`,
+               `thumbnail_content_type` AS `thumbnailContentType`,
+               `time`                   AS `time`,
+               `description`            AS `description`
+        FROM `matzip_new`.`places`
+        WHERE `index` = #{index}
+        LIMIT 1
+    </select>
+
+    <select id="selectPlaceVoNoThumbnail"
+            resultType="dev.yhpark.matzip.vos.PlaceVo">
+        SELECT `place`.`index`                                 AS `index`,
+               `place`.`user_index`                            AS `userIndex`,
+               `place`.`name`                                  AS `name`,
+               `place`.`contact`                               AS `contact`,
+               `place`.`address_postal`                        AS `addressPostal`,
+               `place`.`address_primary`                       AS `addressPrimary`,
+               `place`.`address_secondary`                     AS `addressSecondary`,
+               `place`.`lat`                                   AS `lat`,
+               `place`.`lng`                                   AS `lng`,
+               `place`.`time`                                  AS `time`,
+               `place`.`description`                           AS `description`,
+               (SELECT COUNT(0)
+                FROM `matzip_new`.`reviews` AS `review`
+                WHERE `place`.`index` = `review`.`place_index`
+                  AND `review`.`deleted_flag` = FALSE)         AS `ratingCount`,
+               (SELECT TRUNCATE(AVG(`rating`), 2)
+                FROM `matzip_new`.`reviews` AS `review`
+                WHERE `place`.`index` = `review`.`place_index`
+                  AND `review`.`deleted_flag` = FALSE)         AS `ratingAverage`,
+               `place`.`user_index` = #{userIndex}             AS `isMine`,
+               (SELECT COUNT(0) > 0
+                FROM `matzip_new`.`place_saves` AS `placeSave`
+                WHERE `place`.`index` = `placeSave`.`place_index`
+                  AND `placeSave`.`user_index` = #{userIndex}) AS `isSaved`,
+               (SELECT COUNT(0)
+                FROM `matzip_new`.`reviews` AS `review`
+                         LEFT JOIN `matzip_new`.`review_images` AS `reviewImage` ON `review`.`index` = `reviewImage`.`review_index`
+                WHERE `place`.`index` = `review`.`place_index`
+                GROUP BY `place`.`index`)                      AS `imageCount`
+        FROM `matzip_new`.`places` AS `place`
+        WHERE `place`.`index` = #{index}
+        LIMIT 1
+    </select>
+
+    <select id="selectPlaceVosInCoordsNoThumbnail"
+            resultType="dev.yhpark.matzip.vos.PlaceVo"><![CDATA[
+        SELECT `place`.`index`                                 AS `index`,
+               `place`.`user_index`                            AS `userIndex`,
+               `place`.`name`                                  AS `name`,
+               `place`.`contact`                               AS `contact`,
+               `place`.`address_postal`                        AS `addressPostal`,
+               `place`.`address_primary`                       AS `addressPrimary`,
+               `place`.`address_secondary`                     AS `addressSecondary`,
+               `place`.`lat`                                   AS `lat`,
+               `place`.`lng`                                   AS `lng`,
+               `place`.`time`                                  AS `time`,
+               `place`.`description`                           AS `description`,
+               (SELECT COUNT(0)
+                FROM `matzip_new`.`reviews` AS `review`
+                WHERE `place`.`index` = `review`.`place_index`
+                  AND `review`.`deleted_flag` = FALSE)         AS `ratingCount`,
+               (SELECT TRUNCATE(AVG(`rating`), 2)
+                FROM `matzip_new`.`reviews` AS `review`
+                WHERE `place`.`index` = `review`.`place_index`
+                  AND `review`.`deleted_flag` = FALSE)         AS `ratingAverage`,
+               `place`.`user_index` = #{userIndex}             AS `isMine`,
+               (SELECT COUNT(0) > 0
+                FROM `matzip_new`.`place_saves` AS `placeSave`
+                WHERE `place`.`index` = `placeSave`.`place_index`
+                  AND `placeSave`.`user_index` = #{userIndex}) AS `isSaved`,
+               (SELECT COUNT(0)
+                FROM `matzip_new`.`reviews` AS `review`
+                         LEFT JOIN `matzip_new`.`review_images` AS `reviewImage` ON `review`.`index` = `reviewImage`.`review_index`
+                WHERE `place`.`index` = `review`.`place_index`
+                GROUP BY `place`.`index`)                      AS `imageCount`
+        FROM `matzip_new`.`places` AS `place`
+        WHERE `lat` BETWEEN #{minLat} AND #{maxLat}
+          AND `lng` BETWEEN #{minLng} AND #{maxLng}
+        ORDER BY `ratingAverage`, `ratingCount` DESC
+        ]]></select>
+
+    <select id="selectPlaceSave"
+            resultType="dev.yhpark.matzip.entities.PlaceSaveEntity">
+        SELECT `user_index`  AS `userIndex`,
+               `place_index` AS `placeIndex`,
+               `created_at`  AS `createdAt`
+        FROM `matzip_new`.`place_saves`
+        WHERE `user_index` = #{userIndex}
+          AND `place_index` = #{placeIndex}
+        LIMIT 1
+    </select>
+
+    <select id="selectSavedPlacesByUserIndex"
+            resultType="dev.yhpark.matzip.vos.PlaceVo">
+        SELECT `place`.`index`                                    AS `index`,
+               `place`.`user_index`                               AS `userIndex`,
+               `place`.`name`                                     AS `name`,
+               `place`.`contact`                                  AS `contact`,
+               `place`.`address_postal`                           AS `addressPostal`,
+               `place`.`address_primary`                          AS `addressPrimary`,
+               `place`.`address_secondary`                        AS `addressSecondary`,
+               `place`.`lat`                                      AS `lat`,
+               `place`.`lng`                                      AS `lng`,
+               `place`.`time`                                     AS `time`,
+               `place`.`description`                              AS `description`,
+               (SELECT COUNT(0)
+                FROM `matzip_new`.`reviews` AS `review`
+                WHERE `place`.`index` = `review`.`place_index`
+                  AND `review`.`deleted_flag` = FALSE)            AS `ratingCount`,
+               IFNULL((SELECT TRUNCATE(AVG(`rating`), 2)
+                       FROM `matzip_new`.`reviews` AS `review`
+                       WHERE `place`.`index` = `review`.`place_index`
+                         AND `review`.`deleted_flag` = FALSE), 0) AS `ratingAverage`,
+               `place`.`user_index` = #{userIndex}                AS `isMine`,
+               (SELECT COUNT(0) > 0
+                FROM `matzip_new`.`place_saves` AS `placeSave`
+                WHERE `place`.`index` = `placeSave`.`place_index`
+                  AND `placeSave`.`user_index` = #{userIndex})    AS `isSaved`,
+               (SELECT COUNT(0)
+                FROM `matzip_new`.`reviews` AS `review`
+                         LEFT JOIN `matzip_new`.`review_images` AS `reviewImage` ON `review`.`index` = `reviewImage`.`review_index`
+                WHERE `place`.`index` = `review`.`place_index`
+                GROUP BY `place`.`index`)                         AS `imageCount`
+        FROM `matzip_new`.`places` AS `place`
+                 RIGHT JOIN `matzip_new`.`place_saves` AS `placeSave` ON `place`.`index` = `placeSave`.`place_index`
+        WHERE `place`.`user_index` = #{userIndex}
+          AND `placeSave`.`user_index` = #{userIndex}
+        ORDER BY `ratingAverage`, `ratingCount` DESC
+    </select>
+
+    <select id="selectReviewByIndex"
+            resultType="dev.yhpark.matzip.entities.ReviewEntity">
+        SELECT `index`        AS `index`,
+               `user_index`   AS `userIndex`,
+               `place_index`  AS `placeIndex`,
+               `rating`       AS `rating`,
+               `visit`        AS `visit`,
+               `content`      AS `content`,
+               `written_at`   AS `writtenAt`,
+               `deleted_flag` AS `isDeleted`
+        FROM `matzip_new`.`reviews`
+        WHERE `index` = #{index}
+        LIMIT 1
+    </select>
+
+    <select id="selectReviewVoByIndex"
+            resultType="dev.yhpark.matzip.vos.ReviewVo">
+        SELECT `review`.`index`                                        AS `index`,
+               `review`.`user_index`                                   AS `userIndex`,
+               `review`.`place_index`                                  AS `placeIndex`,
+               `review`.`rating`                                       AS `rating`,
+               `review`.`visit`                                        AS `visit`,
+               `review`.`content`                                      AS `content`,
+               `review`.`written_at`                                   AS `writtenAt`,
+               `review`.`deleted_flag`                                 AS `isDeleted`,
+               `user`.`nickname`                                       AS `userNickname`,
+               (SELECT COUNT(0)
+                FROM `matzip_new`.`review_likes` AS `reviewLike`
+                WHERE `review`.`index` = `reviewLike`.`review_index`)  AS `likeCount`,
+               (SELECT COUNT(0) = 1
+                FROM `matzip_new`.`review_likes` AS `reviewLike`
+                WHERE `review`.`index` = `reviewLike`.`review_index`
+                  AND `reviewLike`.`user_index` = #{userIndex})        AS `isLiked`,
+               (SELECT COUNT(0)
+                FROM `matzip_new`.`review_images` AS `reviewImage`
+                WHERE `review`.`index` = `reviewImage`.`review_index`) AS `imageCount`
+        FROM `matzip_new`.`reviews` AS `review`
+                 LEFT JOIN `matzip_new`.`users` AS `user` ON `review`.`user_index` = `user`.`index`
+        WHERE `review`.`index` = #{index}
+        GROUP BY `review`.`index`
+        ORDER BY `review`.`index`, `likeCount` DESC
+    </select>
+
+    <select id="selectReviewVosByPlaceIndex"
+            resultType="dev.yhpark.matzip.vos.ReviewVo">
+        SELECT `review`.`index`                                        AS `index`,
+               `review`.`user_index`                                   AS `userIndex`,
+               `review`.`place_index`                                  AS `placeIndex`,
+               `review`.`rating`                                       AS `rating`,
+               `review`.`visit`                                        AS `visit`,
+               `review`.`content`                                      AS `content`,
+               `review`.`written_at`                                   AS `writtenAt`,
+               `review`.`deleted_flag`                                 AS `isDeleted`,
+               `user`.`nickname`                                       AS `userNickname`,
+               (SELECT COUNT(0)
+                FROM `matzip_new`.`review_likes` AS `reviewLike`
+                WHERE `review`.`index` = `reviewLike`.`review_index`)  AS `likeCount`,
+               (SELECT COUNT(0) = 1
+                FROM `matzip_new`.`review_likes` AS `reviewLike`
+                WHERE `review`.`index` = `reviewLike`.`review_index`
+                  AND `reviewLike`.`user_index` = #{userIndex})        AS `isLiked`,
+               (SELECT COUNT(0)
+                FROM `matzip_new`.`review_images` AS `reviewImage`
+                WHERE `review`.`index` = `reviewImage`.`review_index`) AS `imageCount`
+        FROM `matzip_new`.`reviews` AS `review`
+                 LEFT JOIN `matzip_new`.`users` AS `user` ON `review`.`user_index` = `user`.`index`
+        WHERE `review`.`place_index` = #{placeIndex}
+          AND `review`.`deleted_flag` = FALSE
+        GROUP BY `review`.`index`
+        ORDER BY `review`.`index`, `likeCount` DESC
+    </select>
+
+    <select id="selectReviewImageByIndex"
+            resultType="dev.yhpark.matzip.entities.ReviewImageEntity">
+        SELECT `index`        AS `index`,
+               `review_index` AS `reviewIndex`,
+               `data`         AS `data`,
+               `data_type`    AS `dataType`
+        FROM `matzip_new`.`review_images`
+        WHERE `index` = #{index}
+        LIMIT 1
+    </select>
+
+    <select id="selectReviewImagesByPlaceIndexNoData"
+            resultType="dev.yhpark.matzip.entities.ReviewImageEntity">
+        SELECT `reviewImage`.`index`        AS `index`,
+               `reviewImage`.`review_index` AS `reviewIndex`
+        FROM `matzip_new`.`review_images` AS `reviewImage`
+                 LEFT JOIN `matzip_new`.`reviews` AS `review` ON `reviewImage`.`review_index` = `review`.`index`
+        WHERE `review`.`place_index` = #{placeIndex}
+        ORDER BY `review`.`index` DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectReviewImagesByReviewIndexNoData"
+            resultType="dev.yhpark.matzip.entities.ReviewImageEntity">
+        SELECT `index`        AS `index`,
+               `review_index` AS `reviewIndex`
+        FROM `matzip_new`.`review_images`
+        WHERE `review_index` = #{reviewIndex}
+        ORDER BY `index`
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectReviewLikeByUserIndexReviewIndex"
+            resultType="dev.yhpark.matzip.entities.ReviewLikeEntity">
+        SELECT `user_index`   AS `userIndex`,
+               `review_index` AS `reviewIndex`,
+               `liked_at`     AS `likedAt`
+        FROM `matzip_new`.`review_likes`
+        WHERE `user_index` = #{userIndex}
+          AND `review_index` = #{reviewIndex}
+        LIMIT 1
+    </select>
+
+    <select id="selectWeathersByDateXY"
+            resultType="dev.yhpark.matzip.entities.WeatherEntity"><![CDATA[
+        SELECT `index`              AS `index`,
+               `datetime`           AS `datetime`,
+               `x`                  AS `x`,
+               `y`                  AS `y`,
+               `temperature`        AS `temperature`,
+               `precipitation`      AS `precipitation`,
+               `humidity`           AS `humidity`,
+               `precipitation_type` AS `precipitationType`,
+               `sky_type`           AS `skyType`
+        FROM `matzip_new`.`weathers`
+        WHERE `datetime` >= #{fromDate}
+          AND `x` = #{x}
+          AND `y` = #{y}
+        LIMIT #{limit}
+        ]]></select>
+
+    <update id="updatePlace"
+            parameterType="dev.yhpark.matzip.entities.PlaceEntity">
+        UPDATE `matzip_new`.`places`
+        SET `user_index`             = #{userIndex},
+            `name`                   = #{name},
+            `contact`                = #{contact},
+            `address_postal`         = #{addressPostal},
+            `address_primary`        = #{addressPrimary},
+            `address_secondary`      = #{addressSecondary},
+            `lat`                    = #{lat},
+            `lng`                    = #{lng},
+            `thumbnail`              = IFNULL(#{thumbnail}, `thumbnail`),
+            `thumbnail_content_type` = IFNULL(#{thumbnailContentType}, `thumbnail_content_type`),
+            `time`                   = #{time},
+            `description`            = #{description}
+        WHERE `index` = #{index}
+        LIMIT 1
+    </update>
+
+    <update id="updateReview"
+            parameterType="dev.yhpark.matzip.entities.ReviewEntity">
+        UPDATE `matzip_new`.`reviews`
+        SET `user_index`   = #{userIndex},
+            `place_index`  = #{placeIndex},
+            `rating`       = #{rating},
+            `visit`        = #{visit},
+            `content`      = #{content},
+            `written_at`   = #{writtenAt},
+            `deleted_flag` = #{isDeleted}
+        WHERE `index` = #{index}
+        LIMIT 1
+    </update>
+</mapper>

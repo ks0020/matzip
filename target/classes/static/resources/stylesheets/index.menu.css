@@ -1,0 +1,115 @@
+@charset "UTF-8";
+
+:root {
+    --menu-item-size: 4.25rem;
+}
+
+#menu {
+    width: var(--menu-item-size);
+    background-color: rgb(var(--color-grey-50));
+    border-right: 0.0625rem solid rgb(var(--color-grey-300));
+    box-shadow: var(--default-pane-shadow);
+    overflow: hidden;
+    transition-duration: 250ms;
+    transition-property: width;
+    transition-timing-function: ease;
+    z-index: 5;
+
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#menu[collapsed] {
+    width: 0;
+}
+
+#menu > .item.logo {
+    width: var(--menu-item-size);
+    aspect-ratio: 1/1;
+    background-color: rgb(var(--color-concept));
+
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#menu > .item.logo > .image {
+    width: 67.5%;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+#menu > .menu {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#menu > .menu.main {
+    flex: 1;
+}
+
+#menu > .menu > .item {
+    width: var(--menu-item-size);
+    aspect-ratio: 1/1;
+    border-top: 0.0625rem solid rgb(var(--color-grey-200));
+    box-sizing: border-box;
+    cursor: pointer;
+    font-size: 0.85rem;
+    line-height: 100%;
+    padding: 0 0.25rem;
+    user-select: none;
+
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#menu > .menu > .item:last-child {
+    border-bottom: 0.0625rem solid rgb(var(--color-grey-200));
+}
+
+#menu > .menu > .item[selected] {
+    background-color: rgb(var(--color-grey-800));
+    border-top: 0.0625rem solid rgb(var(--color-grey-700));
+    cursor: default;
+}
+
+#menu > .menu > .item > .icon {
+    height: 1.25rem;
+    filter: brightness(65%);
+    margin-bottom: 0.5rem;
+    transition-duration: 125ms;
+    transition-property: filter;
+    transition-timing-function: ease;
+}
+
+#menu > .menu > .item:hover > .icon {
+    filter: brightness(50%);
+    -webkit-user-drag: none;
+}
+
+#menu > .menu > .item[selected] > .icon {
+    filter: brightness(100%);
+}
+
+#menu > .menu > .item > .text {
+    color: rgb(var(--color-grey-600));
+    text-align: center;
+    transition-duration: 125ms;
+    transition-property: color;
+    transition-timing-function: ease;
+}
+
+#menu > .menu > .item:hover > .text {
+    color: rgb(var(--color-grey-700));
+}
+
+#menu > .menu > .item[selected] > .text {
+    color: rgb(var(--color-grey-100))
+}

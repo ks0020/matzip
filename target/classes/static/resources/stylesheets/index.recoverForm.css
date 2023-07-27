@@ -1,0 +1,115 @@
+@charset "UTF-8";
+
+:root {
+    --recover-form-width: 30rem;
+}
+
+#recoverForm {
+    width: var(--recover-form-width);
+}
+
+#recoverForm > .choice-container {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(auto, 1fr));
+    padding: 2rem 2rem 0 2rem;
+}
+
+#recoverForm > .choice-container > .choice {
+    border: 0.125rem solid rgb(var(--color-grey-300));
+    cursor: pointer;
+    padding: 1rem;
+    user-select: none;
+
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#recoverForm > .choice-container > .choice:has(> input:checked) {
+    border: 0.125rem solid rgb(var(--color-concept));
+}
+
+#recoverForm > .choice-container > .choice > .input {
+    display: none;
+}
+
+#recoverForm > .choice-container > .choice > .text {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+#recoverForm > .choice-container > .choice > .desc {
+    font-size: 0.9rem;
+    line-height: 125%;
+    text-align: justify;
+}
+
+#recoverForm > .__body {
+    padding-top: 0.75rem;
+}
+
+#recoverForm > .__body {
+    display: none;
+
+    align-items: stretch;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#recoverForm[data-mz-choice="email"] > .__body[data-mz-choice="email"],
+#recoverForm[data-mz-choice="password"] > .__body[data-mz-choice="password"] {
+    display: flex;
+}
+
+#recoverForm > .__body > * + * {
+    margin-top: 0.5rem;
+}
+
+#recoverForm > .__body > .multi-container {
+    align-items: stretch;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+#recoverForm > .__body > .multi-container > * + * {
+    margin-left: 0.5rem;
+}
+
+#recoverForm > .__body > .multi-container > .big {
+    flex: 1;
+}
+
+#recoverForm > .__body > .multi-container > ._object-button {
+    width: unset;
+}
+
+#recoverForm > .__body > .button-container {
+    margin-top: 0.75rem;
+}
+
+#recoverForm > .__body > .button-container > * + * {
+    margin-top: 0.5rem;
+}
+
+#recoverForm > .__body > .button-container > [name="emailRetry"],
+#recoverForm > .__body > .button-container > [name="emailSubmit"],
+#recoverForm > .__body > .button-container > [name="passwordRetry"],
+#recoverForm > .__body > .button-container > [name="passwordSubmit"] {
+    display: none;
+}
+
+#recoverForm > .__body > .button-container > [name="emailRetry"][visible],
+#recoverForm > .__body > .button-container > [name="emailSubmit"][visible],
+#recoverForm > .__body > .button-container > [name="passwordRetry"][visible],
+#recoverForm > .__body > .button-container > [name="passwordSubmit"][visible] {
+    display: block;
+}
+
+@media screen and (max-width: 40rem) {
+    #recoverForm {
+        width: 100vw;
+    }
+}

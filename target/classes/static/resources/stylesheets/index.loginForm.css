@@ -1,0 +1,60 @@
+@charset "UTF-8";
+
+#loginForm > .__body > .input-container {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#loginForm > .__body > .input-container > * + * {
+    margin-top: 0.5rem;
+}
+
+#loginForm > .__body > .button-container {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#loginForm > .__body > .button-container > * + * {
+    margin-top: 0.5rem;
+}
+
+#loginForm > .__body > .menu {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#loginForm > .__body > .menu > .item {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+#loginForm > .__body > .menu > .item > .text {
+    color: rgb(var(--color-grey-600));
+    margin-right: 0.375rem;
+}
+
+#loginForm > .__body > .menu > .item > .link {
+    width: unset;
+    color: rgb(var(--color-grey-900));
+    cursor: pointer;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+#loginForm > .__body > .menu > .item > .link:hover {
+    text-decoration: underline;
+}
+
+@media screen and (max-width: 40rem) {
+    #loginForm {
+        width: 100vw;
+    }
+}

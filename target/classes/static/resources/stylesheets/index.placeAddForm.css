@@ -1,0 +1,127 @@
+@charset "UTF-8";
+
+#placeAddForm > .__body {
+    display: none;
+    flex: 1;
+
+    align-items: stretch;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#placeAddForm[data-mz-step="address"] > .__body {
+    padding: unset;
+}
+
+#placeAddForm[data-mz-step="add"] > .__body[data-mz-step="add"],
+#placeAddForm[data-mz-step="address"] > .__body[data-mz-step="address"] {
+    display: flex;
+}
+
+#placeAddForm > .__body > * + * {
+    margin-top: 0.5rem;
+}
+
+#placeAddForm > .__body > .multi-container {
+    align-items: stretch;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+#placeAddForm > .__body > .multi-container > * + * {
+    margin-left: 0.5rem;
+}
+
+#placeAddForm > .__body > .multi-container > .big {
+    flex: 1;
+}
+
+#placeAddForm > .__body > .multi-container > ._object-button {
+    width: unset;
+}
+
+#placeAddForm > .__body > .message-box {
+    background-color: rgb(var(--color-grey-200));
+    border-radius: 0.375rem;
+    font-size: 0.9rem;
+    line-height: 125%;
+    padding: 0.625rem 0.8rem;
+}
+
+#placeAddForm > .__body > .thumbnail {
+    height: 12.5rem;
+    background-color: rgb(var(--color-grey-200));
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 0.375rem;
+    color: rgb(var(--color-grey-600));
+    cursor: pointer;
+    user-select: none;
+
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#placeAddForm > .__body > .thumbnail:hover {
+    color: rgb(var(--color-grey-900));
+    filter: brightness(97.5%);
+}
+
+#placeAddForm > .__body > .thumbnail > .empty {
+    display: none;
+}
+
+#placeAddForm > .__body > .thumbnail[data-mz-thumbnail-container="empty"] > .empty {
+    display: block;
+}
+
+#placeAddForm > .__body > .time-table {
+    border-collapse: collapse;
+}
+
+#placeAddForm > .__body > .time-table > thead > tr > th {
+    border-top: 0.125rem solid rgb(var(--color-grey-400));
+    padding: 0.425rem;
+}
+
+#placeAddForm > .__body > .time-table > thead > tr > th,
+#placeAddForm > .__body > .time-table > tbody > tr > th {
+    font-weight: inherit;
+}
+
+#placeAddForm > .__body > .time-table > tbody > tr > th,
+#placeAddForm > .__body > .time-table > tbody > tr > td {
+    padding: 0.375rem 0.375rem;
+}
+
+#placeAddForm > .__body > .time-table > thead > tr > th,
+#placeAddForm > .__body > .time-table > tbody > tr:nth-child(even) > th,
+#placeAddForm > .__body > .time-table > tbody > tr:nth-child(even) > td {
+    background-color: rgb(var(--color-grey-200));
+}
+
+#placeAddForm > .__body > .time-table > tbody > tr:last-child > th,
+#placeAddForm > .__body > .time-table > tbody > tr:last-child > td {
+    border-bottom: 0.125rem solid rgb(var(--color-grey-400));
+}
+
+#placeAddForm > .__body > .time-table > tbody > tr[data-mz-day="sun"] > th {
+    color: rgb(var(--color-red-500));
+}
+
+#placeAddForm > .__body > .time-table > tbody > tr[data-mz-day="sat"] > th {
+    color: rgb(var(--color-blue-500));
+}
+
+#placeAddForm > .__body > .time-table > tbody > tr > td > input[type="time"] {
+    width: 6.5rem;
+    font-size: 0.9rem;
+}
+
+#placeAddForm > .__body > .button-container > * + * {
+    margin-top: 0.5rem;
+}

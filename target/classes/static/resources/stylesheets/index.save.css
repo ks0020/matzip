@@ -1,0 +1,240 @@
+@charset "UTF-8";
+
+:root {
+    --place-width: 20rem;
+}
+
+#save {
+    width: var(--place-width);
+    background-color: rgb(var(--color-grey-50));
+    border-right: 0.0625rem solid rgb(var(--color-grey-300));
+    box-shadow: var(--default-pane-shadow);
+    box-sizing: border-box;
+    display: none;
+    overflow: hidden auto;
+    position: relative;
+    transition-duration: 250ms;
+    transition-property: width;
+    transition-timing-function: ease;
+    z-index: 4;
+
+    align-items: stretch;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#save[visible] {
+    display: flex;
+}
+
+#save[collapsed] {
+    width: 0;
+}
+
+#save > .head {
+    top: 0;
+    backdrop-filter: blur(0.25rem);
+    background-color: rgba(var(--color-grey-50), 85%);
+    border-bottom: 0.0625rem solid rgb(var(--color-grey-300));
+    padding: 1rem;
+    position: sticky;
+    z-index: 1;
+}
+
+#save > .head > .search-form {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#save > .head > .search-form > .label {
+    position: relative;
+
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#save > .head > .search-form > .label > .icon {
+    top: 50%;
+    left: 0.875rem;
+    height: 1.25rem;
+    filter: grayscale(100%);
+    pointer-events: none;
+    position: absolute;
+    transform: translateY(-50%);
+}
+
+#save > .head > .search-form > .label:focus-within > .icon {
+    filter: grayscale(0);
+}
+
+#save > .head > .search-form > .label > .input {
+    height: 2.7rem;
+    border: 0.125rem solid rgb(var(--color-grey-300));
+    border-radius: 0.25rem;
+    padding: 0 0.75rem 0 2.25rem;
+}
+
+#save > .head > .search-form > .label > .input:focus {
+    border: 0.125rem solid rgb(var(--color-concept));
+}
+
+#save > .head > .address-container {
+    background-color: rgb(var(--color-grey-200));
+    border-radius: 0.25rem;
+    margin-top: 0.625rem;
+    padding: 0.5rem 1rem;
+}
+
+#save > .head > .weather-container {
+    max-height: 10rem;
+    background-color: rgb(var(--color-grey-200));
+    border-radius: 0.25rem;
+    display: grid;
+    font-size: 0.85rem;
+    grid-template-columns: repeat(5, minmax(auto, 1fr));
+    margin-top: 0.5rem;
+    overflow: hidden;
+    padding: 0.75rem 0.5rem;
+    position: relative;
+    transition-duration: 250ms;
+    transition-property: max-height, margin-top, padding;
+    transition-timing-function: ease;
+}
+
+#save[compact] > .head > .weather-container {
+    max-height: 0;
+    margin-top: 0;
+    padding: 0;
+}
+
+#save[compact] > .head:hover > .weather-container {
+    max-height: 10rem;
+    margin-top: 0.5rem;
+    padding: 0.75rem 0.5rem;
+    transition-delay: 500ms;
+}
+
+#save > .head > .weather-container > .loading {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(var(--color-grey-200));
+    color: rgb(var(--color-grey-600));
+    display: none;
+    font-size: 1rem;
+    font-style: italic;
+    position: absolute;
+    z-index: 1;
+
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#save > .head > .weather-container[data-mz-weather="loading"] > .loading {
+    display: flex;
+}
+
+#save > .head > .weather-container > .weather {
+    white-space: nowrap;
+
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#save > .head > .weather-container > .weather > * {
+    line-height: 100%;
+}
+
+#save > .head > .weather-container > .weather > * + * {
+    margin-top: 0.3rem;
+}
+
+#save > .head > .weather-container > .weather > .icon {
+    width: 2rem;
+    margin-bottom: 0.25rem;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+#save > .head > .weather-container > .weather > .hour {
+    color: rgb(var(--color-grey-600));
+}
+
+#save > .head > .weather-container > .weather > .temperature {
+    border-radius: 0.25rem;
+    padding: 0.125rem 0.2rem;
+}
+
+#save > .head > .weather-container > .weather.cold > .temperature {
+    background-color: rgb(var(--color-blue-400));
+    color: rgb(var(--color-grey-50));
+}
+
+#save > .head > .weather-container > .weather.hot > .temperature {
+    background-color: rgb(var(--color-red-400));
+    color: rgb(var(--color-grey-50));
+}
+
+#save > .head > .weather-container > .weather > .humidity {
+    color: rgb(var(--color-blue-900));
+    font-size: 0.8rem;
+    font-weight: 300;
+}
+
+#save > .head > .weather-container > .weather > .precipitation {
+    color: rgb(var(--color-grey-600));
+    font-size: 0.8rem;
+    font-weight: 300;
+}
+
+#save > .menu {
+    backdrop-filter: blur(0.25rem);
+    background-color: rgba(var(--color-grey-50), 85%);
+    border-bottom: 0.0625rem solid rgb(var(--color-grey-300));
+    display: grid;
+    font-size: 0.9rem;
+    grid-auto-flow: column;
+    position: sticky;
+    z-index: 1;
+}
+
+#save > .menu > .item {
+    color: rgb(var(--color-grey-600));
+    cursor: pointer;
+    padding: 0.5rem;
+    user-select: none;
+    transition-duration: 250ms;
+    transition-property: color;
+    transition-timing-function: ease;
+
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#save > .menu > .item:hover {
+    color: rgb(var(--color-grey-900));
+}
+
+#save > .menu > .item > .icon {
+    height: 1.25rem;
+    filter: opacity(60%);
+    margin-right: 0.3rem;
+    transition-duration: 250ms;
+    transition-property: filter;
+    transition-timing-function: ease;
+    -webkit-user-drag: none;
+}
+
+#save > .menu > .item:hover > .icon {
+    filter: opacity(85%);
+}

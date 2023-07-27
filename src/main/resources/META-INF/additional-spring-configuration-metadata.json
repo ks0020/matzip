@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "custom.ncloud.accesskey",
+      "type": "java.lang.String",
+      "description": "Description for custom.ncloud.accesskey."
+  }
+] }

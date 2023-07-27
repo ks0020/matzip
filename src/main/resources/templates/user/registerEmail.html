@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="domain" type="java.lang.String"*/-->
+<!--/*@thymesVar id="emailCode" type="dev.yhpark.matzip.entities.EmailCodeEntity"*/-->
+<head>
+    <meta charset="UTF-8">
+    <title>[맛집] 회원가입 이메일 인증</title>
+</head>
+<body>
+<div style="background-color: #212121; color: #fafafa; padding: 26px 32px;">
+    <h2 style="cursor: default; display: inline-block; font-size: 26px; font-weight: lighter; margin-block: unset; margin-inline: unset; margin-right: 8px; padding-inline: unset;">맛집 회원가입</h2>
+    <h3 style="cursor: default; display: inline-block; font-size: 20px; font-weight: lighter; margin-block: unset; margin-inline: unset; padding-inline: unset;">이메일 인증</h3>
+</div>
+<div style="font-size: 15px; font-weight: lighter; line-height: 137.5%; padding: 18px 32px;">
+    <p>안녕하세요! 맛집에 회원가입 해주셔서 감사합니다.</p>
+    <p>해당 이메일은 회원가입 절차를 완료하기 위해 발송된 인증 메일로, 아래 <b>이메일 인증하기</b>버튼을 클릭하거나, <u>포함된 링크로 이동</u>할 경우 회원가입이 완료되게 됩니다. 단, 해당 이메일은 전송된 일시로 부터 약 <b>한 시간만 유효함</b>으로 유의해 주시기 바랍니다.</p>
+    <div style="background-color: #eeeeee; color: #616161; display: block; font-size: 13px; padding: 12px 18px;">
+        <div>
+            <span>요청 IP : </span>
+            <code th:text="${emailCode.getClientIp()}"></code>
+        </div>
+        <div>
+            <span>요청 브라우저 정보 : </span>
+            <code th:text="${emailCode.getClientUa()}"></code>
+        </div>
+        <div>
+            <span>요청 일시 : </span>
+            <code th:text="${#dates.format(emailCode.getCreatedAt(), 'yyyy-MM-dd HH:mm:ss')}"></code>
+        </div>
+    </div>
+    <p>만약, 해당 이메일 주소의 소유주께서 회원가입을 요청하신게 아니라면 절대로 아래 버튼을 클릭하거나 링크로 이동하는 등의 이메일 인증을 완료해주지 마시고, 해당 이메일을 <i>안전하게 폐기</i>해 주시기 바랍니다.</p>
+    <div style="padding: 10px 0; text-align: center;">
+        <a th:href="@{${domain + 'user/email-auth'} (email = ${emailCode.getEmail()}, code = ${emailCode.getCode()}, salt = ${emailCode.getSalt()})}" style="background-color: #ffc72a; color: #fafafa; display: inline-block; padding: 12px 18px; text-decoration: none; user-select: none;" target="_blank">이메일 인증하기</a>
+    </div>
+    <p>만약, 위 버튼이 작동하지 않는다면 아래 링크를 복사하여 주소창에 붙여넣어 사용하여도 정상 작동함으로 참고해 주시기 바랍니다.</p>
+    <code style="background-color: #eeeeee; color: #616161; display: block; font-size: 13px; padding: 12px 18px;" th:text="${domain + 'user/email-auth?email=' + emailCode.getEmail() + '&code=' + emailCode.getCode() + '&salt=' + emailCode.getSalt()}"></code>
+    <p>해당 이메일은 <b>발신 전용 이메일</b>임으로 회신하지 마시고, 문의 사항이 있으시다면 <a style="font-weight: bold;" target="_blank" th:href="@{${domain}}">홈페이지</a> 고객센터를 통해 문의해 주시기 바랍니다. 감사합니다.</p>
+</div>
+<div style="background-color: #212121; color: #fafafa; font-size: 12px; padding: 18px 32px;">&copy; 2023 Matzip.</div>
+</body>
+</html>

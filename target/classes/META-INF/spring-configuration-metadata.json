@@ -1,0 +1,57 @@
+{
+  "groups": [
+    {
+      "name": "custom.kakao",
+      "type": "dev.yhpark.matzip.configs.CustomKakaoPropertyConfig",
+      "sourceType": "dev.yhpark.matzip.configs.CustomKakaoPropertyConfig"
+    },
+    {
+      "name": "custom.kms",
+      "type": "dev.yhpark.matzip.configs.CustomKmsPropertyConfig",
+      "sourceType": "dev.yhpark.matzip.configs.CustomKmsPropertyConfig"
+    },
+    {
+      "name": "custom.ncloud",
+      "type": "dev.yhpark.matzip.configs.CustomNCloudPropertyConfig",
+      "sourceType": "dev.yhpark.matzip.configs.CustomNCloudPropertyConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "custom.kakao.app-key",
+      "type": "java.lang.String",
+      "sourceType": "dev.yhpark.matzip.configs.CustomKakaoPropertyConfig"
+    },
+    {
+      "name": "custom.kms.service-key",
+      "type": "java.lang.String",
+      "sourceType": "dev.yhpark.matzip.configs.CustomKmsPropertyConfig"
+    },
+    {
+      "name": "custom.ncloud.access-key",
+      "type": "java.lang.String",
+      "sourceType": "dev.yhpark.matzip.configs.CustomNCloudPropertyConfig"
+    },
+    {
+      "name": "custom.ncloud.accesskey",
+      "type": "java.lang.String",
+      "description": "Description for custom.ncloud.accesskey."
+    },
+    {
+      "name": "custom.ncloud.from",
+      "type": "java.lang.String",
+      "sourceType": "dev.yhpark.matzip.configs.CustomNCloudPropertyConfig"
+    },
+    {
+      "name": "custom.ncloud.secret-key",
+      "type": "java.lang.String",
+      "sourceType": "dev.yhpark.matzip.configs.CustomNCloudPropertyConfig"
+    },
+    {
+      "name": "custom.ncloud.service-id",
+      "type": "java.lang.String",
+      "sourceType": "dev.yhpark.matzip.configs.CustomNCloudPropertyConfig"
+    }
+  ],
+  "hints": []
+}
